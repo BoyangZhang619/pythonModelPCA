@@ -122,6 +122,7 @@ plt.ylabel("特征贡献度")
 plt.title("基于PCA的特征贡献度")
 plt.tight_layout()
 plt.show()
+plt.savefig(os.path.join(IMG_DIR,"contributionOfFeaturesOfPCA.png"))
 
 # 重构误差与异常检测
 print("\n=== 重构误差异常检测 ===")
