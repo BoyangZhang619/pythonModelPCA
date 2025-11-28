@@ -14,23 +14,36 @@ PCA analysis on synthetic multi-sensor data
 8. 可视化（PCA 二维散点）
 9. 总结讨论
 
-运行前请确保 synthetic_sensor_pca_dataset.csv 已生成并与脚本同目录。
 """
 
+import os
+import random
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
 from sklearn.impute import SimpleImputer
+from data_generation import generate_data as gd
 plt.rcParams['font.sans-serif'] = ['SimHei']  # 用来正常显示中文标签
 plt.rcParams['axes.unicode_minus'] = False    # 用来正常显示负号
-
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+CSV_DIR = os.path.join(BASE_DIR, "csv")
+IMG_DIR = os.path.join(BASE_DIR, "img")
+#---------------------------------------
+# 0. 加载与初步浏览
+#---------------------------------------
+print("\n=== 创建数据 ===")
+try:
+    gd(ranSeed=random.randint(1,100))
+except Exception as e:
+    print(e)
+print("\n=== 创建成功 ===")
 #---------------------------------------
 # 1. 加载与初步浏览
 #---------------------------------------
 print("\n=== 加载数据 ===")
-df = pd.read_csv("csv/synthetic_sensor_pca_dataset.csv")
+df = pd.read_csv(os.path.join(CSV_DIR, "synthetic_sensor_pca_dataset.csv"))
 print(df.head())
 print(df.info())
 
@@ -77,7 +90,7 @@ plt.ylabel("累计解释方差")
 plt.title("累计解释方差（Cumulative Explained Variance）")
 plt.grid(alpha=0.3)
 plt.tight_layout()
-plt.savefig("./img/explained_variance.png")
+plt.savefig(os.path.join(IMG_DIR,"explained_variance.png"))
 plt.show()
 
 # 自动选择 ≥90% 方差的主成分数
@@ -90,6 +103,7 @@ print(f"\n为了达到 ≥90% 的累计解释方差，所需主成分数 k = {k}
 #---------------------------------------
 pca = PCA(n_components=k)
 X_k = pca.fit_transform(X_scaled)
+print(f"{X_k.shape=}")
 
 print("\n=== PCA 载荷（主成分方向） ===")
 loadings = pd.DataFrame(
@@ -138,21 +152,21 @@ plt.xlabel("样本索引")
 plt.ylabel("重构误差")
 plt.legend()
 plt.tight_layout()
-plt.savefig("./img/reconstruction_error.png")
+plt.savefig(os.path.join(IMG_DIR,"reconstruction_error.png"))
 plt.show()
 
 #---------------------------------------
 # 9. PCA 二维散点可视化
 #---------------------------------------
-plt.figure(figsize=(6,5))
+plt.figure(figsize=(5,5))
 plt.scatter(X_pca[:,0], X_pca[:,1], c=y, cmap="coolwarm", s=8)
 plt.xlabel("PC1")
 plt.ylabel("PC2")
 plt.title("PCA 二维投影图（红色为异常）")
 plt.tight_layout()
-plt.savefig("./img/pca_scatter.png")
+plt.axis('equal')
+plt.savefig(os.path.join(IMG_DIR,"pca_scatter.png"))
 plt.show()
-
 #---------------------------------------
 # 10. 总结
 #---------------------------------------
