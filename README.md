@@ -1,1 +1,2 @@
-仅个人学习该模型所找ai获取的题目
+仅个人学习这些东西的玩意，没有任何别的使用价值，谢谢
+These things are just for personal learning and have no other practical value. Thank you
